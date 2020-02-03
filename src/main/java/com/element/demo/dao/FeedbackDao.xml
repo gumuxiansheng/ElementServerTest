@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.element.demo.entity">
+    <select id="listAllFeedbacks" resultType="Feedback">
+        select * from feedback
+    </select>
+    <insert id="insertFeedback">
+        insert into feedback (time, qaType, source, institutionType, province, city, district, contentType, content, contact) values (#{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact})
+    </insert>
+</mapper>
