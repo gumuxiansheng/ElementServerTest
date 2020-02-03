@@ -1,18 +1,25 @@
 package com.element.demo.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.element.demo.entity.*;
+import javax.servlet.http.HttpServletRequest;
+
+import com.element.demo.entity.FeedbackEntity;
+import com.element.table.ExcelHandler;
+import com.element.table.ExcelTable;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @RestController
 public class FileController {
@@ -23,24 +30,22 @@ public class FileController {
         return "Greetings from Spring Boot!";
     }
 
-    @RequestMapping("/upload")
-    public String uploadFile() {
-        // 根据 mybatis-config.xml 配置的信息得到 sqlSessionFactory
-        InputStream inputStream;
+    @RequestMapping(value="/upload", method=RequestMethod.POST)
+    @ResponseBody
+    public String uploadFile(@RequestParam("file") CommonsMultipartFile file, HttpServletRequest request) {
+        // 文件名
+        String fileName = file.getOriginalFilename();
+        // 文件流
         try {
-            inputStream = Resources.getResourceAsStream(resource);
+            InputStream inputStream = file.getInputStream();
 
-            SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
-            SqlSession session = sqlSessionFactory.openSession();
-            List<FeedbackEntity> allFeedbacks = session.selectList("listAllFeedbacks");
-            for (FeedbackEntity feedback : allFeedbacks) {
-                System.out.println("Time:" + feedback.getTime() + ", Content:" + feedback.getContent());
-            }
+            ExcelTable table = ExcelHandler.readExcel(inputStream);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return "Upload table file!";
+
+        // TODO: receive uploaded file
+        return "Uploaded table file!";
     }
 
     @RequestMapping("/list")
