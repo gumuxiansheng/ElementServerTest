@@ -23,7 +23,7 @@ public class ExcelHandler {
      * @param filePath
      * @return
      */
-    public static ExcelTable readExcel(final String filePath) {
+    public static ExcelTable readExcel(final String filePath, boolean hasHeader) {
         if (filePath == null || filePath.isEmpty()) {
             return null;
         }
@@ -31,7 +31,7 @@ public class ExcelHandler {
         ExcelTable eTable = null;
 
         try {
-            eTable = readExcel(new FileInputStream(filePath));
+            eTable = readExcel(new FileInputStream(filePath), hasHeader);
         } catch (final FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -45,25 +45,24 @@ public class ExcelHandler {
      * @param inputStream
      * @return
      */
-    public static ExcelTable readExcel(final InputStream inputStream) {
+    public static ExcelTable readExcel(final InputStream inputStream, boolean hasHeader) {
         Workbook workbook = null;
         String title = null;
         Table table = null;
 
         try {
-            // ByteArrayOutputStream baos = cloneInputStream(inputStream);
-
-            // // create two input streams, one for workbook to find title, the other for table data
-            // InputStream inputStream1 = new ByteArrayInputStream(baos.toByteArray());  
-            // InputStream inputStream2 = new ByteArrayInputStream(baos.toByteArray());
             workbook = WorkbookFactory.create(inputStream);
 
             final Sheet sheet = workbook.getSheetAt(0);
 
             // The first row is the title of this table, and the data starts from the second row.
-            Row titleRow = sheet.getRow(0);
-            title = titleRow.getCell(0).getStringCellValue();
-            sheet.removeRow(titleRow);
+            if (hasHeader){
+                Row titleRow = sheet.getRow(0);
+                title = titleRow.getCell(0).getStringCellValue();
+                sheet.removeRow(titleRow);
+            }
+
+            // write into temp file then it's convenient for tablesaw to read.
             FileOutputStream fOutputStream = new FileOutputStream("temp.xlsx");
             workbook.write(fOutputStream);
             FileInputStream inputStream2 = new FileInputStream(new File("temp.xlsx"));

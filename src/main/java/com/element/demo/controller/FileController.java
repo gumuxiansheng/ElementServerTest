@@ -36,11 +36,21 @@ import tech.tablesaw.api.Row;
 @RestController
 public class FileController {
 
+    /**
+     * Index page
+     * @return
+     */
     @RequestMapping("/")
     public String index() {
         return "Greetings from Spring Boot!";
     }
 
+    /**
+     * Upload excel file
+     * @param file excel file from request body, csv not supported yet
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
     public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
@@ -54,7 +64,7 @@ public class FileController {
             HashMap<String, HashMap<String, String>> propertyMaps = new Gson().fromJson(propertiesJsonStr, new TypeToken<HashMap<String, HashMap<String, String>>>() {}.getType());
             InputStream inputStream = file.getInputStream();
 
-            ExcelTable table = ExcelHandler.readExcel(inputStream);
+            ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
             
             for (Row row : table.getTable()) {
@@ -70,7 +80,7 @@ public class FileController {
     }
 
     /**
-     * list all feedbacks in database
+     * List out all feedbacks in the database
      * @return json data
      */
     @RequestMapping("/listAll")
