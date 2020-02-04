@@ -3,11 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.element.demo.entity">
-    <!-- <select id="listAllFeedbacks" resultType="FeedbackEntity">
+<mapper namespace="com.element.demo.dao">
+    <select id="listAllFeedbacks" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback
-    </select> -->
+    </select>
     <insert id="insertFeedback" parameterType="com.element.demo.entity.FeedbackEntity">
-        insert into feedback (time, qaType, source, institutionType, province, city, district, contentType, content, contact) values (#{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact})
+        insert into feedback (time, qa_type, source, institution_type, province, city, district, content_type, content, contact, file_name) values (#{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact}, #{fileName})
     </insert>
 </mapper>

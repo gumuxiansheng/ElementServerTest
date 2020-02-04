@@ -2,12 +2,17 @@ package com.element.demo.entity;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Date;
+import java.time.LocalDateTime;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class FeedbackEntity {
 
     // 提交时间
-    private Date time;
+    private LocalDateTime time;
     // 问卷类型
     private String qaType;
     // 来源
@@ -29,27 +34,19 @@ public class FeedbackEntity {
     // 状态
     private String status;
     // 是否已下发
-    private Boolean distributed;
+    private Integer distributed;
     // 下发时间
-    private Date distributTime;
+    private LocalDateTime distributTime;
     // 处理意见
     private String treatment;
     // 上传文件名
     private String fileName;
 
-    public Date getTime() {
+    public LocalDateTime getTime() {
         return time;
     }
 
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public void setTime(Date time) {
+    public void setTime(LocalDateTime time) {
         this.time = time;
     }
 
@@ -133,19 +130,19 @@ public class FeedbackEntity {
         this.status = status;
     }
 
-    public Boolean getDistributed() {
+    public Integer getDistributed() {
         return distributed;
     }
 
-    public void setDistributed(Boolean distributed) {
+    public void setDistributed(Integer distributed) {
         this.distributed = distributed;
     }
 
-    public Date getDistributTime() {
+    public LocalDateTime getDistributTime() {
         return distributTime;
     }
 
-    public void setDistributTime(Date distributTime) {
+    public void setDistributTime(LocalDateTime distributTime) {
         this.distributTime = distributTime;
     }
 
@@ -157,10 +154,22 @@ public class FeedbackEntity {
         this.treatment = treatment;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public void setProperty(String property, Object value) {
         Class<?> clz = FeedbackEntity.class;
         try {
             String setMethodStr = "set" + property.substring(0, 1).toUpperCase() + property.substring(1);
+            // Contact may be stored as long in table, we want it be string.
+            if (value instanceof Long){
+                value = String.valueOf(value);
+            }
             Method method = clz.getMethod(setMethodStr, value.getClass());
             method.invoke(this, value);
         } catch (NoSuchMethodException | SecurityException e) {
