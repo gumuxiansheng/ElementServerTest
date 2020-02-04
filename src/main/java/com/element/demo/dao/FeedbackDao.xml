@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.element.demo.entity">
-    <select id="listAllFeedbacks" resultType="Feedback">
+    <!-- <select id="listAllFeedbacks" resultType="FeedbackEntity">
         select * from feedback
-    </select>
-    <insert id="insertFeedback">
+    </select> -->
+    <insert id="insertFeedback" parameterType="com.element.demo.entity.FeedbackEntity">
         insert into feedback (time, qaType, source, institutionType, province, city, district, contentType, content, contact) values (#{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact})
     </insert>
 </mapper>

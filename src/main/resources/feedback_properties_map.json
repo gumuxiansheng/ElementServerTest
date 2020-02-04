@@ -1,0 +1,12 @@
+{
+    "schema1":{
+        "time":"提交时间",
+        "qaType":"问卷类型",
+        "source":"来源",
+        "institutionType":"涉及大厅类型",
+        "district":"所属区",
+        "contentType":"内容类型",
+        "content":"反馈内容",
+        "contact":"联系方式"
+    }
+}

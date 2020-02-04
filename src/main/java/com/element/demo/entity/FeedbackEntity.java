@@ -1,8 +1,11 @@
 package com.element.demo.entity;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 public class FeedbackEntity {
+
     // 提交时间
     private Date time;
     // 问卷类型
@@ -28,12 +31,22 @@ public class FeedbackEntity {
     // 是否已下发
     private Boolean distributed;
     // 下发时间
-    private String distributTime;
+    private Date distributTime;
     // 处理意见
     private String treatment;
+    // 上传文件名
+    private String fileName;
 
     public Date getTime() {
         return time;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public void setTime(Date time) {
@@ -128,11 +141,11 @@ public class FeedbackEntity {
         this.distributed = distributed;
     }
 
-    public String getDistributTime() {
+    public Date getDistributTime() {
         return distributTime;
     }
 
-    public void setDistributTime(String distributTime) {
+    public void setDistributTime(Date distributTime) {
         this.distributTime = distributTime;
     }
 
@@ -144,5 +157,16 @@ public class FeedbackEntity {
         this.treatment = treatment;
     }
 
-    
+    public void setProperty(String property, Object value) {
+        Class<?> clz = FeedbackEntity.class;
+        try {
+            String setMethodStr = "set" + property.substring(0, 1).toUpperCase() + property.substring(1);
+            Method method = clz.getMethod(setMethodStr, value.getClass());
+            method.invoke(this, value);
+        } catch (NoSuchMethodException | SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 }
