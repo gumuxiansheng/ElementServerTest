@@ -10,6 +10,7 @@ import com.element.demo.service.impl.FeedbackServiceImpl;
 import com.element.demo.util.LocalDateAdapter;
 import com.google.gson.GsonBuilder;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,7 @@ public class FeedbackController {
      * @return
      */
     @RequestMapping(value = "/feedback/upload", method = RequestMethod.POST)
+    @CrossOrigin
     @ResponseBody
     public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         int insertedNum = feebackService.uploadFile(file);
@@ -48,6 +50,7 @@ public class FeedbackController {
      * @return json data
      */
     @RequestMapping("/feedback/listAll")
+    @CrossOrigin
     @ResponseBody
     public String listData() {
         List<FeedbackEntity> allFeedbacks = feebackService.listAll();
