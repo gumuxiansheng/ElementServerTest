@@ -8,6 +8,6 @@
         select * from feedback
     </select>
     <insert id="insertFeedback" parameterType="com.element.demo.entity.FeedbackEntity">
-        insert into feedback (serial_num, time, qa_type, source, institution_type, province, city, district, content_type, content, contact, file_name) values (#{serialNum}, #{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact}, #{fileName})
+        insert into feedback (serial_num, time, qa_type, source, institution_type, province, city, district, content_type, content, contact, status, file_name) values (#{serialNum}, #{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact}, #{status}, #{fileName})
     </insert>
 </mapper>

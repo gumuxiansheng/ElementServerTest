@@ -34,9 +34,16 @@ public class FeedbackConverter {
         return FeedbackConverterHolder.instance;
     }
 
-    static HashMap<String, HashMap<String, String>> propertyMaps = null;
+    static HashMap<String, HashMap<String, String>> propertyMaps = new HashMap<>();
 
-    public FeedbackEntity getEntity(String schema, Row row, String fileName) {
+    /**
+     * Get FeedbackEntity instance from tablesaw row and it's source file name.
+     * @param schema file schema configured in resources/feedback_properties_map.json
+     * @param row tablesaw row, one row represents one entity
+     * @param fileName conversion file's name, need to record it in database
+     * @return the instance of FeedbackEntity
+     */
+    public FeedbackEntity getFiledEntity(String schema, Row row, String fileName) {
         HashMap<String, String> propertyMap = propertyMaps.get(schema);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();

@@ -41,7 +41,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             SqlSession session = getSqlSession();
             
             for (Row row : table.getTable()) {
-                FeedbackEntity fEntity = FeedbackConverter.getInstance().getEntity("schema1", row, fileName);
+                FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
                 insertedNum += session.insert("insertFeedback", fEntity);
             }
             session.commit();

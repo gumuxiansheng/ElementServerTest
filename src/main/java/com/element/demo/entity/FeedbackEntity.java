@@ -40,7 +40,7 @@ public class FeedbackEntity {
     // 是否已下发
     @Getter @Setter private Integer distributed;
     // 下发时间
-    @Getter @Setter private LocalDateTime distributTime;
+    @Getter @Setter private LocalDateTime distributeTime;
     // 处理意见
     @Getter @Setter private String treatment;
     // 上传文件名
