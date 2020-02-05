@@ -13,6 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class FeedbackEntity {
 
+    // 序号
+    @Getter @Setter private Integer serialNum;
     // 提交时间
     @Getter @Setter private LocalDateTime time;
     // 问卷类型

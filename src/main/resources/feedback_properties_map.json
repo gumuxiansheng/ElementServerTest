@@ -1,5 +1,6 @@
 {
     "schema1":{
+        "serialNum":"序号",
         "time":"提交时间",
         "qaType":"问卷类型",
         "source":"来源",

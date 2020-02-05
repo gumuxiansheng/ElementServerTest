@@ -4,9 +4,15 @@ import java.util.List;
 
 import com.element.demo.entity.FeedbackEntity;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public interface FeedbackService {
 
-    public boolean uploadFile();
+    public int uploadFile(MultipartFile file);
+
+    public int updateFile(MultipartFile file);
+
+    public int updateFeedback(FeedbackEntity source, String property, Object value);
 
     public List<FeedbackEntity> listAll();
 
