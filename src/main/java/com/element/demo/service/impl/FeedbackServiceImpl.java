@@ -39,7 +39,7 @@ public class FeedbackServiceImpl implements FeedbackService {
 
             ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
-            
+
             for (Row row : table.getTable()) {
                 FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
                 insertedNum += session.insert("insertFeedback", fEntity);

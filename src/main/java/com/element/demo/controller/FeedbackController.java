@@ -1,24 +1,21 @@
 package com.element.demo.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.service.impl.FeedbackServiceImpl;
-import com.element.demo.util.LocalDateAdapter;
-import com.google.gson.GsonBuilder;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
+@RequestMapping("/feedback")
 public class FeedbackController {
     private FeedbackServiceImpl feebackService = new FeedbackServiceImpl();
 
@@ -28,7 +25,7 @@ public class FeedbackController {
      */
     @RequestMapping("/")
     public String index() {
-        return "Greetings from Spring Boot!";
+        return "Greetings from Feedback Spring Boot!";
     }
 
     /**
@@ -37,9 +34,8 @@ public class FeedbackController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/feedback/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @CrossOrigin
-    @ResponseBody
     public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         int insertedNum = feebackService.uploadFile(file);
         return "Uploaded table file! " + insertedNum + " items inserted";
@@ -49,13 +45,11 @@ public class FeedbackController {
      * List out all feedbacks in the database
      * @return json data
      */
-    @RequestMapping("/feedback/listAll")
+    @RequestMapping(value = "/list_all.json", produces="application/json;charset=utf-8")
     @CrossOrigin
-    @ResponseBody
-    public String listData() {
-        List<FeedbackEntity> allFeedbacks = feebackService.listAll();
-        // return json string
-        return new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create().toJson(allFeedbacks);
+    public List<FeedbackEntity> listData() {
+        // return json
+        return feebackService.listAll();
     }
 
 }

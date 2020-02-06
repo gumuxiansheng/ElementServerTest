@@ -4,6 +4,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 
+import com.element.demo.util.LocalDateAdapter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +19,7 @@ public class FeedbackEntity {
     // 序号
     @Getter @Setter private Integer serialNum;
     // 提交时间
+    @JsonFormat(pattern = LocalDateAdapter.GLOBALTIMEFORMAT)
     @Getter @Setter private LocalDateTime time;
     // 问卷类型
     @Getter @Setter private String qaType;
@@ -40,6 +44,7 @@ public class FeedbackEntity {
     // 是否已下发
     @Getter @Setter private Integer distributed;
     // 下发时间
+    @JsonFormat(pattern = LocalDateAdapter.GLOBALTIMEFORMAT)
     @Getter @Setter private LocalDateTime distributeTime;
     // 处理意见
     @Getter @Setter private String treatment;

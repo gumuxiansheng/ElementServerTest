@@ -10,8 +10,11 @@ import com.google.gson.JsonSerializer;
 import java.lang.reflect.Type;
 
 public class LocalDateAdapter implements JsonSerializer<LocalDateTime> {
+
+    public static final String GLOBALTIMEFORMAT = "yyyy-MM-dd HH:mm:ss";
+
     @Override
     public JsonElement serialize(final LocalDateTime localDateTime, final Type type, final JsonSerializationContext jsonSerializationContext) {
-        return new JsonPrimitive(localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        return new JsonPrimitive(localDateTime.format(DateTimeFormatter.ofPattern(GLOBALTIMEFORMAT)));
     }
 }
