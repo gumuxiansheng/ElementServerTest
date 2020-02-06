@@ -46,7 +46,7 @@ public class FeedbackEntity {
     // 下发时间
     @JsonFormat(pattern = LocalDateAdapter.GLOBALTIMEFORMAT)
     @Getter @Setter private LocalDateTime distributeTime;
-    // 处理意见
+    // 处理
     @Getter @Setter private String treatment;
     // 上传文件名
     @Getter @Setter private String fileName;

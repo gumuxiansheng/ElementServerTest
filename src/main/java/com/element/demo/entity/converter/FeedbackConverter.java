@@ -2,6 +2,7 @@ package com.element.demo.entity.converter;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import com.element.demo.entity.FeedbackEntity;
 import com.google.gson.Gson;
@@ -47,12 +48,22 @@ public class FeedbackConverter {
         HashMap<String, String> propertyMap = propertyMaps.get(schema);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
+        List<String> colNames = row.columnNames();
+
+        if (colNames == null) {
+            return feedbackEntity;
+        }
 
         for (String property : propertyMap.keySet()) {
             String rowName = propertyMap.get(property);
-            feedbackEntity.setProperty(property, row.getObject(rowName));
+
+            if (colNames.contains(rowName)){
+                feedbackEntity.setProperty(property, row.getObject(rowName));
+            }
+
         }
 
+        // Default values
         feedbackEntity.setProvince("北京");
         feedbackEntity.setCity("北京市");
         feedbackEntity.setStatus("待处理");

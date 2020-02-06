@@ -5,9 +5,17 @@
         "qaType":"问卷类型",
         "source":"来源",
         "institutionType":"涉及大厅类型",
+        "province":"所属省",
+        "city":"所属市",
         "district":"所属区",
         "contentType":"内容类型",
         "content":"反馈内容",
-        "contact":"联系方式"
+        "contact":"联系方式",
+        "status":"状态",
+        "distributed":"已下发",
+        "distributeTime":"下发时间",
+        "treatment":"处理",
+        "fileName":"上传文件名",
+        "treatPerson":"经手人"
     }
 }
