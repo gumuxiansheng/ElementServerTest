@@ -1,15 +1,12 @@
 package com.element.demo.entity.converter;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import com.element.demo.config.Config;
 import com.element.demo.entity.FeedbackEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.ClassPathResource;
 
 import tech.tablesaw.api.Row;
 
@@ -20,15 +17,10 @@ public class FeedbackConverter {
     }
 
     private FeedbackConverter() {
-        ClassPathResource classPathResource = new ClassPathResource("feedback_properties_map.json");
-        String propertiesJsonStr;
-        try {
-            propertiesJsonStr = FileUtils.readFileToString(classPathResource.getFile(), "UTF-8");
-            propertyMaps = new Gson().fromJson(propertiesJsonStr, new TypeToken<HashMap<String, HashMap<String, String>>>() {}.getType());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+        String propertiesJsonStr = new Config().getFeedbackSchemas();
+        propertyMaps = new Gson().fromJson(propertiesJsonStr,
+                new TypeToken<HashMap<String, HashMap<String, String>>>() {
+                }.getType());
     }
 
     public static FeedbackConverter getInstance() {
@@ -39,8 +31,10 @@ public class FeedbackConverter {
 
     /**
      * Get FeedbackEntity instance from tablesaw row and it's source file name.
-     * @param schema file schema configured in resources/feedback_properties_map.json
-     * @param row tablesaw row, one row represents one entity
+     * 
+     * @param schema   file schema configured in
+     *                 resources/feedback_properties_map.json
+     * @param row      tablesaw row, one row represents one entity
      * @param fileName conversion file's name, need to record it in database
      * @return the instance of FeedbackEntity
      */
@@ -57,7 +51,7 @@ public class FeedbackConverter {
         for (String property : propertyMap.keySet()) {
             String rowName = propertyMap.get(property);
 
-            if (colNames.contains(rowName)){
+            if (colNames.contains(rowName)) {
                 feedbackEntity.setProperty(property, row.getObject(rowName));
             }
 

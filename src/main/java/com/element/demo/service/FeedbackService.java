@@ -25,4 +25,6 @@ public interface FeedbackService {
     public boolean update(FeedbackEntity feedbackEntity);
 
     public boolean delete(FeedbackEntity feedbackEntity);
+
+    public String getSchemas();
 }
