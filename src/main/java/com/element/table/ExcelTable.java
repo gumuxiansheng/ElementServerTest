@@ -1,31 +1,22 @@
 package com.element.table;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import tech.tablesaw.api.Table;
 
+@AllArgsConstructor
 public class ExcelTable {
-
-    public ExcelTable(String title, Table table) {
-        this.title = title;
-        this.table = table;
-    }
-
-    String title;
-    Table table;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Table getTable() {
-        return table;
-    }
-
-    public void setTable(Table table) {
-        this.table = table;
-    }
+    @Getter @Setter String title;
+    @Getter @Setter Table table;
 
 }

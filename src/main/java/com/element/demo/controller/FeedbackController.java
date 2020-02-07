@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.service.impl.FeedbackServiceImpl;
+import com.element.table.ExcelTable;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +40,12 @@ public class FeedbackController {
     public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         int insertedNum = feebackService.uploadFile(file);
         return "Uploaded table file! " + insertedNum + " items inserted";
+    }
+
+    @RequestMapping(value = "/uploadTest", method = RequestMethod.POST)
+    @CrossOrigin
+    public List<FeedbackEntity> uploadFileTest(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        return feebackService.uploadFileTest(file);
     }
 
     /**

@@ -40,7 +40,6 @@ public class FeedbackServiceImpl implements FeedbackService {
 
             ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
-            // table.getTable()
 
             for (Row row : table.getTable()) {
                 FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
@@ -51,6 +50,25 @@ public class FeedbackServiceImpl implements FeedbackService {
             e.printStackTrace();
         }
         return insertedNum;
+    }
+
+    public List<FeedbackEntity> uploadFileTest(MultipartFile file) {
+        List<FeedbackEntity> fEntities = new ArrayList<>();
+        ExcelTable table = null;
+        // 文件流
+        try {
+            InputStream inputStream = file.getInputStream();
+            table = ExcelHandler.readExcel(inputStream, true);
+
+            for (Row row : table.getTable()) {
+                FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, "");
+                fEntities.add(fEntity);
+            }
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fEntities;
     }
 
     @Override
