@@ -3,6 +3,7 @@ package com.element.demo.service.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
@@ -94,6 +95,21 @@ public class FeedbackServiceImpl implements FeedbackService {
             e.printStackTrace();
         }
         return allFeedbacks;
+    }
+
+    // @Override
+    public List<FeedbackEntity> listFileRecords(String fileName) {
+        List<FeedbackEntity> fileFeedbacks = new ArrayList<>();
+        HashMap<String, String> map = new HashMap<String, String>();  
+        map.put("fileName", fileName);
+        try {
+            SqlSession session = getSqlSession();
+            fileFeedbacks.addAll(session.selectList("listFileFeedbacks", map));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return fileFeedbacks;
     }
 
     @Override
