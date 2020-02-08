@@ -16,13 +16,15 @@
     <update id="autoDistribute">
         update feedback
             set distributed = 1,
-                distribute_time = NOW()
+                distribute_time = NOW(),
+                status = "已分发"
             where distributed = 0 and UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(update_time) >= ${timeInterval}
     </update>
     <update id="distribute">
         update feedback
             set distributed = 1,
-                distribute_time = NOW()
+                distribute_time = NOW(),
+                status = "已分发"
             where distributed = 0
     </update>
 </mapper>
