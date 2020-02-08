@@ -1,19 +1,34 @@
 package com.element.demo.config;
 
-import java.io.IOException;
+import javax.annotation.PostConstruct;
 
-import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Config {
-    public String getFeedbackSchemas(){
-        ClassPathResource classPathResource = new ClassPathResource("feedback_properties_map.json");
-        String propertiesJsonStr = "";
-        try {
-            propertiesJsonStr = FileUtils.readFileToString(classPathResource.getFile(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return propertiesJsonStr;
+
+    @Autowired
+    private FeedbackConfig feedbackConfig;
+
+    public static Config config;
+
+    @PostConstruct
+    public void init() {
+        config = this;
+        config.feedbackConfig = this.feedbackConfig;
     }
+
+    public String getFeedbackSchemas(){
+        return config.feedbackConfig.getSchemas();
+    }
+
+    public int getFeedbackDistributeTimeInterval(){
+        return config.feedbackConfig.getDistributeTimeInterval();
+    }
+
+    public String getFeedbackDistributeTaskInterval(){
+        return config.feedbackConfig.getDistributeTaskInterval();
+    }
+
 }

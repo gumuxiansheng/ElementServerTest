@@ -5,9 +5,12 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import com.element.demo.config.Config;
+import com.element.demo.config.FeedbackConfig;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.service.impl.FeedbackServiceImpl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +20,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/feedback")
+@EnableScheduling
 public class FeedbackController {
+
+    @Autowired
+    FeedbackConfig feedbackConfig;
+
     private FeedbackServiceImpl feebackService = new FeedbackServiceImpl();
 
     /**
@@ -26,7 +34,7 @@ public class FeedbackController {
      */
     @RequestMapping("/")
     public String index() {
-        return "Greetings from Feedback Spring Boot!";
+        return "Greetings from Feedback Spring Boot!" + feedbackConfig.getDistributeTimeInterval();
     }
 
     /**

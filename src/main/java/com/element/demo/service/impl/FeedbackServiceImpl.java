@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.element.demo.config.Config;
 import com.element.demo.entity.FeedbackEntity;
@@ -105,7 +106,6 @@ public class FeedbackServiceImpl implements FeedbackService {
         try {
             SqlSession session = getSqlSession();
             fileFeedbacks.addAll(session.selectList("listFileFeedbacks", map));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,9 +113,24 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public boolean distribute() {
-        // TODO Auto-generated method stub
-        return false;
+    public int distribute(boolean immediately) {
+        int result = 0;
+        HashMap<String, Object> map = new HashMap<String, Object>();  
+        map.put("timeInterval", new Config().getFeedbackDistributeTimeInterval());
+
+        try {
+            SqlSession session = getSqlSession();
+            if (immediately) {
+                result = session.update("distribute");
+            } else {
+                result = session.update("autoDistribute", map);
+            }
+            
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override

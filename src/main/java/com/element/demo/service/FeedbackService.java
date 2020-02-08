@@ -16,7 +16,7 @@ public interface FeedbackService {
 
     public List<FeedbackEntity> listAll();
 
-    public boolean distribute();
+    public int distribute(boolean immediately);
 
     public List<FeedbackEntity> query();
 

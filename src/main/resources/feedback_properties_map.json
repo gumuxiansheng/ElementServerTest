@@ -14,8 +14,10 @@
         "status":"状态",
         "distributed":"已下发",
         "distributeTime":"下发时间",
-        "treatment":"处理",
-        "fileName":"上传文件名",
-        "treatPerson":"经手人"
+        "treatment":"处理意见",
+        "treatmentStatus":"处理状态",
+        "treatmentTime":"处理时间",
+        "treatPerson":"经手人",
+        "fileName":"上传文件名"
     }
 }
