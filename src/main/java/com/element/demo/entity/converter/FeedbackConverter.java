@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
+import com.element.demo.config.FeedbackSchema;
 import com.element.demo.entity.FeedbackEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,7 +20,7 @@ public class FeedbackConverter {
     private FeedbackConverter() {
         String propertiesJsonStr = new Config().getFeedbackSchemas();
         propertyMaps = new Gson().fromJson(propertiesJsonStr,
-                new TypeToken<HashMap<String, HashMap<String, String>>>() {
+                new TypeToken<HashMap<String, HashMap<String, FeedbackSchema>>>() {
                 }.getType());
     }
 
@@ -27,7 +28,7 @@ public class FeedbackConverter {
         return FeedbackConverterHolder.instance;
     }
 
-    static HashMap<String, HashMap<String, String>> propertyMaps = new HashMap<>();
+    static HashMap<String, HashMap<String, FeedbackSchema>> propertyMaps = new HashMap<>();
 
     /**
      * Get FeedbackEntity instance from tablesaw row and it's source file name.
@@ -39,7 +40,7 @@ public class FeedbackConverter {
      * @return the instance of FeedbackEntity
      */
     public FeedbackEntity getFiledEntity(String schema, Row row, String fileName) {
-        HashMap<String, String> propertyMap = propertyMaps.get(schema);
+        HashMap<String, FeedbackSchema> propertyMap = propertyMaps.get(schema);
 
         FeedbackEntity feedbackEntity = new FeedbackEntity();
         List<String> colNames = row.columnNames();
@@ -49,10 +50,10 @@ public class FeedbackConverter {
         }
 
         for (String property : propertyMap.keySet()) {
-            String rowName = propertyMap.get(property);
+            String colName = propertyMap.get(property).getName();
 
-            if (colNames.contains(rowName)) {
-                feedbackEntity.setProperty(property, row.getObject(rowName));
+            if (colNames.contains(colName)) {
+                feedbackEntity.setProperty(property, row.getObject(colName));
             }
 
         }
