@@ -46,7 +46,13 @@ public class FeedbackController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @CrossOrigin
     public List<FeedbackEntity> uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        feebackService.uploadFile(file);
+        boolean override = Boolean.valueOf(request.getParameter("override"));
+        if (override) {
+            feebackService.updateFile(file);
+        } else {
+            feebackService.uploadFile(file);
+        }
+        
         return feebackService.listFileRecords(file.getOriginalFilename());
         // return "Uploaded table file! " + insertedNum + " items inserted";
     }

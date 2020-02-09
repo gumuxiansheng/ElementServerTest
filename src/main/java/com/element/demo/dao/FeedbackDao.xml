@@ -10,8 +10,14 @@
     <select id="listFileFeedbacks"  parameterType="String" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback where file_name = #{fileName}
     </select>
+    <select id="selectFileVersion"  parameterType="String" resultType="Integer">
+        select version from feedback where file_name = #{fileName} ORDER BY id DESC LIMIT 1;
+    </select>
     <insert id="insertFeedback" parameterType="com.element.demo.entity.FeedbackEntity">
-        insert into feedback (serial_num, time, qa_type, source, institution_type, province, city, district, content_type, content, contact, status, file_name) values (#{serialNum}, #{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact}, #{status}, #{fileName})
+        insert into feedback (serial_num, time, qa_type, source, institution_type, province, city, district, content_type, content, contact, version, status, file_name) values (#{serialNum}, #{time}, #{qaType}, #{source}, #{institutionType}, #{province}, #{city}, #{district}, #{contentType}, #{content}, #{contact}, #{version}, #{status}, #{fileName})
+    </insert>
+    <insert id="overrideFeedback" statementType="CALLABLE">
+        {call OverrideFeedbackFile(#{fileName,mode=IN}, #{oriVersion, jdbcType=INTEGER, mode=OUT})}
     </insert>
     <update id="autoDistribute">
         update feedback
@@ -27,4 +33,12 @@
                 status = "已分发"
             where distributed = 0
     </update>
+    <update id="distributeOne">
+        update feedback
+            set distributed = 1,
+                distribute_time = NOW(),
+                status = "已分发"
+            where distributed = 0 and id = #{feedbackId}
+    </update>
+
 </mapper>

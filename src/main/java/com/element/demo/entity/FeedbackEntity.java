@@ -15,7 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedbackEntity {
-
+    // 数据库id
+    @Getter @Setter private Long id;
     // 序号
     @Getter @Setter private Integer serialNum;
     // 提交时间
@@ -39,6 +40,8 @@ public class FeedbackEntity {
     @Getter @Setter private String content;
     // 联系方式
     @Getter @Setter private String contact;
+    // 版本
+    @Getter @Setter private int version;
     // 状态
     @Getter @Setter private String status;
     // 是否已下发

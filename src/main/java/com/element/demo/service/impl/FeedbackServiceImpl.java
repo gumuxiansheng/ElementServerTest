@@ -42,8 +42,14 @@ public class FeedbackServiceImpl implements FeedbackService {
             ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
 
+            HashMap<String, Object> map = new HashMap<String, Object>();  
+            map.put("fileName", fileName);
+
+            int version = session.selectOne("selectFileVersion", map);
+            version++;
             for (Row row : table.getTable()) {
                 FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
+                fEntity.setVersion(version);
                 insertedNum += session.insert("insertFeedback", fEntity);
             }
             session.commit();
@@ -74,8 +80,32 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public int updateFile(MultipartFile file) {
-        // TODO Auto-generated method stub
-        return 0;
+        // 文件名
+        String fileName = file.getOriginalFilename();
+        int insertedNum = 0;
+        // 文件流
+        try {
+            InputStream inputStream = file.getInputStream();
+
+            ExcelTable table = ExcelHandler.readExcel(inputStream, true);
+            SqlSession session = getSqlSession();
+
+            HashMap<String, Object> map = new HashMap<String, Object>();  
+            map.put("fileName", fileName);
+            map.put("oriVersion", 0);
+
+            session.insert("overrideFeedback", map);
+            int version = (Integer)map.get("oriVersion") + 1;
+            for (Row row : table.getTable()) {
+                FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
+                fEntity.setVersion(version);
+                insertedNum += session.insert("insertFeedback", fEntity);
+            }
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return insertedNum;
     }
 
     @Override
