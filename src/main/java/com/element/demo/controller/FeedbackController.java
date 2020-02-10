@@ -58,14 +58,14 @@ public class FeedbackController {
             feebackService.uploadFile(file);
         }
         
-        return feebackService.listFileRecords(file.getOriginalFilename());
+        return feebackService.queryFileRecords(file.getOriginalFilename());
         // return "Uploaded table file! " + insertedNum + " items inserted";
     }
 
     @RequestMapping(value = "/uploadTest", method = RequestMethod.POST)
     @CrossOrigin
     public List<FeedbackEntity> uploadFileTest(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        return feebackService.listFileRecords(file.getOriginalFilename());
+        return feebackService.queryFileRecords(file.getOriginalFilename());
         // return feebackService.uploadFileTest(file);
     }
 
@@ -91,7 +91,7 @@ public class FeedbackController {
     @CrossOrigin
     public List<FeedbackEntity> listData() {
         // return json
-        return feebackService.listAll();
+        return feebackService.queryAll();
     }
 
     /**

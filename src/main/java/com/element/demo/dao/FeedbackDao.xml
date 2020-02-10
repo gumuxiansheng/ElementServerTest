@@ -3,16 +3,17 @@
 
 <mapper namespace="com.element.demo.dao">
     <select id="listAllFeedbacks" resultType="com.element.demo.entity.FeedbackEntity">
-        select * from feedback
+        select * from feedback where deleted=0
     </select>
     <select id="listFileFeedbacks" parameterType="String" resultType="com.element.demo.entity.FeedbackEntity">
-        select * from feedback where file_name = #{fileName}
+        select * from feedback where file_name = #{fileName} and deleted=0
     </select>
     <select id="queryFeedbacks" parameterType="com.element.demo.dao.QueryMap" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback
         <where>
+            deleted = 0
             <if test="from != null">
-               time&gt;=#{from}
+               and time&gt;=#{from}
             </if>
             <if test="to != null">
                and time&lt;=#{to}
@@ -31,6 +32,7 @@
     <select id="queryFeedbacksByIds" parameterType="List" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback
         <where>
+            deleted = 0 and
             <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
                 id = #{id}
             </foreach>
@@ -50,21 +52,21 @@
             set distributed = 1,
                 distribute_time = NOW(),
                 status = "已分发"
-            where distributed = 0 and UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(update_time) >= ${timeInterval}
+            where distributed = 0 and deleted = 0 and UNIX_TIMESTAMP(NOW()) - UNIX_TIMESTAMP(update_time) >= ${timeInterval}
     </update>
     <update id="distribute">
         update feedback
             set distributed = 1,
                 distribute_time = NOW(),
                 status = "已分发"
-            where distributed = 0
+            where distributed = 0 and deleted = 0
     </update>
     <update id="distributeOne">
         update feedback
             set distributed = 1,
                 distribute_time = NOW(),
                 status = "已分发"
-            where distributed = 0 and id = #{feedbackId}
+            where distributed = 0 and deleted = 0 and id = #{feedbackId}
     </update>
     <update id="distributeSome">
         update feedback
@@ -73,7 +75,7 @@
                 status = "已分发"
         <where>
             <!-- select * from user where distributed = 0 and (id = 1 or id = 2 or id = 3) -->
-            distributed = 0 and
+            distributed = 0 and deleted = 0 and
             <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
                 id = #{id}
              </foreach>

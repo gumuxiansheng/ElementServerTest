@@ -110,13 +110,13 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public int updateFeedback(FeedbackEntity source, String property, Object value) {
+    public int update(FeedbackEntity source) {
         // TODO Auto-generated method stub
         return 0;
     }
 
     @Override
-    public List<FeedbackEntity> listAll() {
+    public List<FeedbackEntity> queryAll() {
         List<FeedbackEntity> allFeedbacks = new ArrayList<>();
         try {
             SqlSession session = getSqlSession();
@@ -128,8 +128,8 @@ public class FeedbackServiceImpl implements FeedbackService {
         return allFeedbacks;
     }
 
-    // @Override
-    public List<FeedbackEntity> listFileRecords(String fileName) {
+    @Override
+    public List<FeedbackEntity> queryFileRecords(String fileName) {
         List<FeedbackEntity> fileFeedbacks = new ArrayList<>();
         HashMap<String, String> map = new HashMap<String, String>();  
         map.put("fileName", fileName);
@@ -233,15 +233,15 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public boolean add(FeedbackEntity feedbackEntity) {
+    public int treat(Long id, String treatmentStatus, String treatment) {
         // TODO Auto-generated method stub
-        return false;
+        return 0;
     }
 
     @Override
-    public boolean update(FeedbackEntity feedbackEntity) {
+    public int treat(List<FeedbackEntity> feedbackEntity) {
         // TODO Auto-generated method stub
-        return false;
+        return 0;
     }
 
     @Override
@@ -253,6 +253,12 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public String getSchemas() {
         return new Config().getFeedbackSchemas();
+    }
+
+    @Override
+    public int update(Long id, String property, Object value) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

@@ -35,4 +35,8 @@ public class Config {
         return config.feedbackConfig.getQueryLimitCount();
     }
 
+    public FeedbackEnumerate getFeedbackEnumerates(){
+        return config.feedbackConfig.getEnumerates();
+    }
+
 }

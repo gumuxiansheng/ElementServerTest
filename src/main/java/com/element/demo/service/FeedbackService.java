@@ -13,15 +13,13 @@ public interface FeedbackService {
 
     public int updateFile(MultipartFile file);
 
-    public int updateFeedback(FeedbackEntity source, String property, Object value);
+    public int update(FeedbackEntity source);
 
-    public List<FeedbackEntity> listAll();
+    public int update(Long id, String property, Object value);
 
-    public int distribute(boolean immediately);
+    public List<FeedbackEntity> queryAll();
 
-    public int distribute(Long id);
-
-    public int distribute(List<Long> id);
+    public List<FeedbackEntity> queryFileRecords(String fileName);
 
     public FeedbackEntity query(Long id);
 
@@ -29,9 +27,15 @@ public interface FeedbackService {
 
     public List<FeedbackEntity> query(QueryMap qm);
 
-    public boolean add(FeedbackEntity feedbackEntity);
+    public int distribute(boolean immediately);
 
-    public boolean update(FeedbackEntity feedbackEntity);
+    public int distribute(Long id);
+
+    public int distribute(List<Long> id);
+
+    public int treat(Long id, String treatmentStatus, String treatment);
+
+    public int treat(List<FeedbackEntity> feedbackEntity);
 
     public boolean delete(FeedbackEntity feedbackEntity);
 
