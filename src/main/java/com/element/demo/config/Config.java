@@ -31,4 +31,8 @@ public class Config {
         return config.feedbackConfig.getDistributeTaskInterval();
     }
 
+    public int getFeedbackQueryLimitCount(){
+        return config.feedbackConfig.getQueryLimitCount();
+    }
+
 }

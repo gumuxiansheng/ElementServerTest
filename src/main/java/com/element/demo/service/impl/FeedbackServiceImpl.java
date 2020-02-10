@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
+import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.entity.converter.FeedbackConverter;
 import com.element.demo.service.FeedbackService;
@@ -163,9 +164,72 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public List<FeedbackEntity> query() {
-        // TODO Auto-generated method stub
-        return null;
+    public int distribute(Long id) {
+        int result = 0;
+        HashMap<String, Object> map = new HashMap<String, Object>();  
+        map.put("feedbackId", id);
+
+        try {
+            SqlSession session = getSqlSession();
+            result = session.update("distributeOne", map);
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public int distribute(List<Long> ids) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("feedbackIds", ids);
+        int result = 0;
+        try {
+            SqlSession session = getSqlSession();
+            result = session.update("distributeSome", map);
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public FeedbackEntity query(Long id) {
+        List<Long> ids = new ArrayList<>();
+        ids.add(id);
+        List<FeedbackEntity> results = query(ids);
+        return (results == null || results.isEmpty()) ? null : results.get(0);
+    }
+
+    @Override
+    public List<FeedbackEntity> query(List<Long> ids) {
+        List<FeedbackEntity> result = new ArrayList<>();
+        HashMap<String, Object> map = new HashMap<String, Object>();  
+        map.put("feedbackIds", ids);
+
+        try {
+            SqlSession session = getSqlSession();
+            result = session.selectList("queryFeedbacksByIds", map);
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public List<FeedbackEntity> query(QueryMap qMap) {
+        List<FeedbackEntity> result = new ArrayList<>();
+
+        try {
+            SqlSession session = getSqlSession();
+            result = session.selectList("queryFeedbacks", qMap);
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override

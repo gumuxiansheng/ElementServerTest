@@ -15,6 +15,7 @@ import lombok.Setter;
 public class FeedbackConfig{
     @Getter @Setter int distributeTimeInterval;
     @Getter @Setter String distributeTaskInterval;
+    @Getter @Setter int queryLimitCount;
 
     public String getSchemas(){
         ClassPathResource classPathResource = new ClassPathResource("feedback_properties_map.json");

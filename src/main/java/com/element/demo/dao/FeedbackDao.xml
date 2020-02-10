@@ -1,16 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.element.demo.dao">
     <select id="listAllFeedbacks" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback
     </select>
-    <select id="listFileFeedbacks"  parameterType="String" resultType="com.element.demo.entity.FeedbackEntity">
+    <select id="listFileFeedbacks" parameterType="String" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback where file_name = #{fileName}
     </select>
-    <select id="selectFileVersion"  parameterType="String" resultType="Integer">
+    <select id="queryFeedbacks" parameterType="com.element.demo.dao.QueryMap" resultType="com.element.demo.entity.FeedbackEntity">
+        select * from feedback
+        <where>
+            <if test="from != null">
+               time&gt;=#{from}
+            </if>
+            <if test="to != null">
+               and time&lt;=#{to}
+            </if>
+            <if test="institution != null and institution != ''">
+                and institution_type=#{institution}
+            </if>
+            <if test="distributedExclusive">
+                and distributed=1
+            </if>
+        </where>
+        <if test="limitCount != 0">
+            limit #{limitCount}
+        </if>
+    </select>
+    <select id="queryFeedbacksByIds" parameterType="List" resultType="com.element.demo.entity.FeedbackEntity">
+        select * from feedback
+        <where>
+            <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
+                id = #{id}
+            </foreach>
+        </where>
+    </select>
+    <select id="selectFileVersion" parameterType="String" resultType="Integer">
         select version from feedback where file_name = #{fileName} ORDER BY id DESC LIMIT 1;
     </select>
     <insert id="insertFeedback" parameterType="com.element.demo.entity.FeedbackEntity">
@@ -39,6 +65,19 @@
                 distribute_time = NOW(),
                 status = "已分发"
             where distributed = 0 and id = #{feedbackId}
+    </update>
+    <update id="distributeSome">
+        update feedback
+            set distributed = 1,
+                distribute_time = NOW(),
+                status = "已分发"
+        <where>
+            <!-- select * from user where distributed = 0 and (id = 1 or id = 2 or id = 3) -->
+            distributed = 0 and
+            <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
+                id = #{id}
+             </foreach>
+        </where>
     </update>
 
 </mapper>
