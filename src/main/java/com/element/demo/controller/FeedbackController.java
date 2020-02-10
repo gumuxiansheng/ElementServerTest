@@ -1,5 +1,6 @@
 package com.element.demo.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -57,14 +58,12 @@ public class FeedbackController {
         }
         
         return feebackService.queryFileRecords(file.getOriginalFilename());
-        // return "Uploaded table file! " + insertedNum + " items inserted";
     }
 
     @RequestMapping(value = "/uploadTest", method = RequestMethod.POST)
     @CrossOrigin
     public List<FeedbackEntity> uploadFileTest(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         return feebackService.queryFileRecords(file.getOriginalFilename());
-        // return feebackService.uploadFileTest(file);
     }
 
     @RequestMapping(value = "/distribute", method = RequestMethod.POST)
@@ -72,6 +71,17 @@ public class FeedbackController {
     public List<FeedbackEntity> distribute(@RequestParam(value="ids", required = true) List<Long> ids, HttpServletRequest request) {
         int distributedNum = feebackService.distribute(ids);
         Logger.getGlobal().info("distributedNum" + distributedNum);
+        return feebackService.query(ids);
+    }
+
+    @RequestMapping(value = "/treat", method = RequestMethod.POST)
+    @CrossOrigin
+    public List<FeedbackEntity> treat(@RequestBody List<FeedbackEntity> feedbackEntities, HttpServletRequest request) {
+        feebackService.treat(feedbackEntities);
+        List<Long> ids = new ArrayList<>();
+        for (FeedbackEntity fEntity : feedbackEntities) {
+            ids.add(fEntity.getId());
+        }
         return feebackService.query(ids);
     }
 

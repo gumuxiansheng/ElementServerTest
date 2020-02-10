@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
+import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.entity.converter.FeedbackConverter;
@@ -233,15 +234,39 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public int treat(Long id, String treatmentStatus, String treatment) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int treat(Long id, String treatmentStatus, String treatment, String treatPerson) {
+        FeedbackEntity fEntity = new FeedbackEntity();
+        fEntity.setId(id);
+        fEntity.setTreatmentStatus(treatmentStatus);
+        fEntity.setTreatment(treatment);
+        fEntity.setTreatPerson(treatPerson);
+        return treat(fEntity);
     }
 
     @Override
-    public int treat(List<FeedbackEntity> feedbackEntity) {
-        // TODO Auto-generated method stub
-        return 0;
+    public int treat(FeedbackEntity feedbackEntity){
+        List<FeedbackEntity> fEntities = new ArrayList<>();
+        fEntities.add(feedbackEntity);
+        return treat(fEntities);
+    }
+
+    @Override
+    public int treat(List<FeedbackEntity> feedbackEntities) {
+        FeedbackEnumerate feedbackEnumerate = new Config().getFeedbackEnumerates();
+        int result = 0;
+        try {
+            SqlSession session = getSqlSession();
+            for (FeedbackEntity feedbackEntity : feedbackEntities) {
+                if (!feedbackEnumerate.getTreatmentStatus().contains(feedbackEntity.getTreatmentStatus())){
+                    throw new IllegalArgumentException("treatment status error");
+                }
+                result += session.insert("treatById", feedbackEntity);
+            }
+            session.commit();
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override

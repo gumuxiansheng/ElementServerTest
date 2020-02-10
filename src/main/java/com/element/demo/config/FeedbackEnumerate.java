@@ -1,5 +1,6 @@
 package com.element.demo.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -10,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedbackEnumerate {
-    @Getter @Setter private List<String> status;
-    @Getter @Setter private List<String> treatmentStatus;
+    @Getter @Setter private List<String> status = new ArrayList<>();
+    @Getter @Setter private List<String> treatmentStatus = new ArrayList<>();
 }

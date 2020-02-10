@@ -33,9 +33,11 @@ public interface FeedbackService {
 
     public int distribute(List<Long> id);
 
-    public int treat(Long id, String treatmentStatus, String treatment);
+    public int treat(Long id, String treatmentStatus, String treatment, String treatPerson);
 
-    public int treat(List<FeedbackEntity> feedbackEntity);
+    public int treat(FeedbackEntity feedbackEntity);
+
+    public int treat(List<FeedbackEntity> feedbackEntities);
 
     public boolean delete(FeedbackEntity feedbackEntity);
 
