@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.element.demo.config.Config;
 import com.element.demo.config.FeedbackConfig;
+import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.service.impl.FeedbackServiceImpl;
@@ -111,6 +112,12 @@ public class FeedbackController {
     public String getSchemaConfig() {
         // return json
         return new Config().getFeedbackSchemas();
+    }
+
+    @RequestMapping(value = "/enumerate.json", produces="application/json;charset=utf-8")
+    @CrossOrigin
+    public FeedbackEnumerate getEnumerates() {
+        return new Config().getFeedbackEnumerates();
     }
 
 }

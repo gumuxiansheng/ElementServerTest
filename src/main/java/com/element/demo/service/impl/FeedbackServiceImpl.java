@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
-import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.entity.converter.FeedbackConverter;
@@ -252,13 +251,12 @@ public class FeedbackServiceImpl implements FeedbackService {
 
     @Override
     public int treat(List<FeedbackEntity> feedbackEntities) {
-        FeedbackEnumerate feedbackEnumerate = new Config().getFeedbackEnumerates();
         int result = 0;
         try {
             SqlSession session = getSqlSession();
             for (FeedbackEntity feedbackEntity : feedbackEntities) {
-                if (!feedbackEnumerate.getTreatmentStatus().contains(feedbackEntity.getTreatmentStatus())){
-                    throw new IllegalArgumentException("treatment status error");
+                if (!FeedbackConverter.getInstance().validate(feedbackEntity)){
+                    throw new IllegalArgumentException("data error");
                 }
                 result += session.insert("treatById", feedbackEntity);
             }

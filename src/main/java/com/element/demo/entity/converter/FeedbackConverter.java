@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.element.demo.config.Config;
+import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.config.FeedbackSchema;
 import com.element.demo.entity.FeedbackEntity;
 import com.google.gson.Gson;
@@ -65,5 +66,17 @@ public class FeedbackConverter {
         feedbackEntity.setFileName(fileName);
 
         return feedbackEntity;
+    }
+
+    public boolean validate(FeedbackEntity fEntity){
+        FeedbackEnumerate fEnumerate = new Config().getFeedbackEnumerates();
+        if (!fEnumerate.getTreatmentStatus().contains(fEntity.getTreatmentStatus())){
+            return false;
+        }
+        if (!fEnumerate.getStatus().contains(fEntity.getStatus())){
+            return false;
+        }
+
+        return true;
     }
 }
