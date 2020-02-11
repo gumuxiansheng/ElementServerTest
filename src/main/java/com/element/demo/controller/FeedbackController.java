@@ -50,7 +50,7 @@ public class FeedbackController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @CrossOrigin
     public List<FeedbackEntity> uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
-        boolean override = Boolean.valueOf(request.getParameter("override"));
+        boolean override = request.getParameterMap().keySet().contains("override") ? Boolean.valueOf(request.getParameter("override")) : true;
         if (override) {
             feebackService.updateFile(file);
         } else {
@@ -68,9 +68,9 @@ public class FeedbackController {
 
     @RequestMapping(value = "/distribute", method = RequestMethod.POST)
     @CrossOrigin
-    public List<FeedbackEntity> distribute(@RequestParam(value="ids", required = true) List<Long> ids, HttpServletRequest request) {
+    public List<FeedbackEntity> distribute(@RequestBody List<Long> ids, HttpServletRequest request) {
         int distributedNum = feebackService.distribute(ids);
-        Logger.getGlobal().info("distributedNum" + distributedNum);
+        Logger.getGlobal().info("distributedNum: " + distributedNum);
         return feebackService.query(ids);
     }
 

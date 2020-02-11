@@ -13,12 +13,12 @@
         "content":{"name":"反馈内容", "display":["upload", "query", "edit"], "editable":false},
         "contact":{"name":"联系方式", "display":["upload", "query", "edit"], "editable":false},
         "status":{"name":"状态", "display":["upload", "query", "edit"], "editable":false},
-        "distributed":{"name":"已下发", "display":["upload", "query", "edit"], "editable":false},
-        "distributeTime":{"name":"下发时间", "display":["upload", "query", "edit"], "editable":false},
-        "treatment":{"name":"处理意见", "display":["upload", "query", "edit"], "editable":true},
-        "treatmentStatus":{"name":"处理状态", "display":["upload", "query", "edit"], "editable":false},
-        "treatmentTime":{"name":"处理时间", "display":["upload", "query", "edit"], "editable":false},
-        "treatPerson":{"name":"经手人", "display":["upload", "query", "edit"], "editable":true},
+        "distributed":{"name":"已分发", "display":[], "editable":false},
+        "distributeTime":{"name":"分发时间", "display":["query", "edit"], "editable":false},
+        "treatment":{"name":"处理意见", "display":["query", "edit"], "editable":true},
+        "treatmentStatus":{"name":"处理状态", "display":["query", "edit"], "editable":false},
+        "treatmentTime":{"name":"处理时间", "display":["query", "edit"], "editable":false},
+        "treatPerson":{"name":"经手人", "display":["query", "edit"], "editable":true},
         "fileName":{"name":"上传文件名", "display":["upload", "query", "edit"], "editable":false}
     }
 

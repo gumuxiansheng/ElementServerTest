@@ -21,9 +21,15 @@
             <if test="institution != null and institution != ''">
                 and feedback.institution_type=#{institution}
             </if>
-            <if test="distributedExclusive">
-                and feedback.distributed=1
-            </if>
+            <choose>
+                <when test="distributedExclusive">
+                    and feedback.distributed=1
+                  </when>
+                <when test="undistributedExclusive">
+                    and feedback.distributed=0
+                  </when>
+            </choose>
+
         </where>
         order by feedback.time
         <if test="limitCount != 0">
@@ -33,7 +39,7 @@
     <select id="queryFeedbacksByIds" parameterType="List" resultType="com.element.demo.entity.FeedbackEntity">
         select * from feedback
         <where>
-            deleted = 0 and
+            deleted = 0
             <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
                 id = #{id}
             </foreach>
@@ -75,10 +81,10 @@
                 distribute_time = NOW(),
                 status = "已分发"
         <where>
-            <!-- select * from user where distributed = 0 and (id = 1 or id = 2 or id = 3) -->
-            distributed = 0 and deleted = 0 and
-            <foreach collection="feedbackIds" item="id" open="and (" close=")" separator="or">
-                id = #{id}
+            <!-- select * from user where distributed = 0 and deleted = 0 and id in (1, 2, 3) -->
+            distributed = 0 and deleted = 0 and id in 
+            <foreach collection="feedbackIds" item="id" open="(" close=")" separator=",">
+                #{id}
              </foreach>
         </where>
     </update>

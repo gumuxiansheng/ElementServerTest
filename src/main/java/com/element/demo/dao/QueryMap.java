@@ -19,7 +19,10 @@ public class QueryMap {
     @JsonFormat(pattern = LocalDateAdapter.GLOBALTIMEFORMAT)
     @Getter @Setter private LocalDateTime to;
     @Getter @Setter private String institution;
+    // 只查询已经分发的条目
     @Getter @Setter private Boolean distributedExclusive;
+    // 只查询未分发的条目，此条件只有在distributedExclusive为false的时候有效。
+    @Getter @Setter private Boolean undistributedExclusive;
     @Setter private Integer limitCount = 0;
 
     public Integer getLimitCount() {
