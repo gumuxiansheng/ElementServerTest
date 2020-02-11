@@ -89,7 +89,7 @@
         </where>
     </update>
     <insert id="treatById" parameterType="com.element.demo.entity.FeedbackEntity" statementType="CALLABLE">
-        {call TreatFeedbackById(#{id,mode=IN}, #{treatmentStatus, mode=IN}, #{treatment, mode=IN}, #{treatPerson, mode=IN})}
+        {call TreatFeedbackById(#{id,mode=IN}, #{treatmentStatus, mode=IN}, #{treatment, mode=IN}, #{treatPerson, mode=IN}, #{status, mode=IN})}
 
     </insert>
 
