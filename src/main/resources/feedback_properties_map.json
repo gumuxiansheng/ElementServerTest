@@ -1,25 +1,25 @@
 {
     "schema1":{
         "id":{"name":"主键", "display":[], "editable":false, "summaryType":"None"},
-        "serialNum":{"name":"序号", "display":["upload", "query", "edit"], "editable":false, "summaryType":"None"},
-        "time":{"name":"提交时间", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Time"},
-        "qaType":{"name":"问卷类型", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "source":{"name":"来源", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "institutionType":{"name":"涉及大厅类型", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "province":{"name":"所属省", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "city":{"name":"所属市", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "district":{"name":"所属区", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "contentType":{"name":"内容类型", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
-        "content":{"name":"反馈内容", "display":["upload", "query", "edit"], "editable":false, "summaryType":"None"},
-        "contact":{"name":"联系方式", "display":["upload", "query", "edit"], "editable":false, "summaryType":"None"},
-        "status":{"name":"状态", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"},
+        "serialNum":{"name":"序号", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"None"},
+        "time":{"name":"提交时间", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Time"},
+        "qaType":{"name":"问卷类型", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "source":{"name":"来源", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "institutionType":{"name":"涉及大厅类型", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "province":{"name":"所属省", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "city":{"name":"所属市", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "district":{"name":"所属区", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "contentType":{"name":"内容类型", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "content":{"name":"反馈内容", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"None"},
+        "contact":{"name":"联系方式", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"None"},
+        "status":{"name":"状态", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"},
         "distributed":{"name":"已分发", "display":[], "editable":false, "summaryType":"Category"},
-        "distributeTime":{"name":"分发时间", "display":["query", "edit"], "editable":false, "summaryType":"Time"},
-        "treatment":{"name":"处理意见", "display":["query", "edit"], "editable":true, "summaryType":"None"},
-        "treatmentStatus":{"name":"处理状态", "display":["query", "edit"], "editable":false, "summaryType":"Category"},
-        "treatmentTime":{"name":"处理时间", "display":["query", "edit"], "editable":false, "summaryType":"Time"},
+        "distributeTime":{"name":"分发时间", "display":["query", "edit", "export"], "editable":false, "summaryType":"Time"},
+        "treatment":{"name":"处理意见", "display":["query", "edit", "export"], "editable":true, "summaryType":"None"},
+        "treatmentStatus":{"name":"处理状态", "display":["query", "edit", "export"], "editable":false, "summaryType":"Category"},
+        "treatmentTime":{"name":"处理时间", "display":["query", "edit", "export"], "editable":false, "summaryType":"Time"},
         "treatPerson":{"name":"经手人", "display":["query", "edit"], "editable":true, "summaryType":"Category"},
-        "fileName":{"name":"上传文件名", "display":["upload", "query", "edit"], "editable":false, "summaryType":"Category"}
+        "fileName":{"name":"上传文件名", "display":["upload", "query", "edit", "export"], "editable":false, "summaryType":"Category"}
     }
 
 }
