@@ -11,6 +11,7 @@ import com.element.demo.config.FeedbackConfig;
 import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
+import com.element.demo.entity.FeedbackSummary;
 import com.element.demo.service.impl.FeedbackServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,13 @@ public class FeedbackController {
     @CrossOrigin
     public List<FeedbackEntity> query(@RequestBody QueryMap qMap, HttpServletRequest request) {
         return feebackService.query(qMap);
+    }
+
+    @RequestMapping(value = "/querySummary", method = RequestMethod.POST)
+    @CrossOrigin
+    public FeedbackSummary querySummary(@RequestBody QueryMap qMap, HttpServletRequest request) {
+        String schemaName = request.getParameterMap().keySet().contains("schema") ? request.getParameter("schema") : "schema1";
+        return feebackService.querySummery(qMap, schemaName);
     }
 
     /**

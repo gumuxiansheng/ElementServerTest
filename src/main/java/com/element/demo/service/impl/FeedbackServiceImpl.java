@@ -2,17 +2,28 @@ package com.element.demo.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.element.demo.config.Config;
+import com.element.demo.config.FeedbackSchema;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
+import com.element.demo.entity.FeedbackSummary;
+import com.element.demo.entity.FeedbackSummary.CategorySummaryItem;
+import com.element.demo.entity.FeedbackSummary.FeedbackColumnSummary;
 import com.element.demo.entity.converter.FeedbackConverter;
 import com.element.demo.service.FeedbackService;
+import com.element.demo.util.LocalDateAdapter;
 import com.element.table.ExcelHandler;
 import com.element.table.ExcelTable;
+import com.element.table.JsonHandler;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -21,6 +32,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import tech.tablesaw.api.Row;
+import tech.tablesaw.api.Table;
 
 public class FeedbackServiceImpl implements FeedbackService {
 
@@ -43,7 +55,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
 
-            HashMap<String, Object> map = new HashMap<String, Object>();  
+            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("fileName", fileName);
 
             int version = session.selectOne("selectFileVersion", map);
@@ -72,7 +84,7 @@ public class FeedbackServiceImpl implements FeedbackService {
                 FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, "");
                 fEntities.add(fEntity);
             }
-            
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,12 +103,12 @@ public class FeedbackServiceImpl implements FeedbackService {
             ExcelTable table = ExcelHandler.readExcel(inputStream, true);
             SqlSession session = getSqlSession();
 
-            HashMap<String, Object> map = new HashMap<String, Object>();  
+            HashMap<String, Object> map = new HashMap<String, Object>();
             map.put("fileName", fileName);
             map.put("oriVersion", 0);
 
             session.insert("overrideFeedback", map);
-            int version = (Integer)map.get("oriVersion") + 1;
+            int version = (Integer) map.get("oriVersion") + 1;
             for (Row row : table.getTable()) {
                 FeedbackEntity fEntity = FeedbackConverter.getInstance().getFiledEntity("schema1", row, fileName);
                 fEntity.setVersion(version);
@@ -131,7 +143,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<FeedbackEntity> queryFileRecords(String fileName) {
         List<FeedbackEntity> fileFeedbacks = new ArrayList<>();
-        HashMap<String, String> map = new HashMap<String, String>();  
+        HashMap<String, String> map = new HashMap<String, String>();
         map.put("fileName", fileName);
         try {
             SqlSession session = getSqlSession();
@@ -145,7 +157,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public int distribute(boolean immediately) {
         int result = 0;
-        HashMap<String, Object> map = new HashMap<String, Object>();  
+        HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("timeInterval", new Config().getFeedbackDistributeTimeInterval());
 
         try {
@@ -155,7 +167,7 @@ public class FeedbackServiceImpl implements FeedbackService {
             } else {
                 result = session.update("autoDistribute", map);
             }
-            
+
             session.commit();
         } catch (IOException e) {
             e.printStackTrace();
@@ -166,7 +178,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public int distribute(Long id) {
         int result = 0;
-        HashMap<String, Object> map = new HashMap<String, Object>();  
+        HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("feedbackId", id);
 
         try {
@@ -205,7 +217,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     @Override
     public List<FeedbackEntity> query(List<Long> ids) {
         List<FeedbackEntity> result = new ArrayList<>();
-        HashMap<String, Object> map = new HashMap<String, Object>();  
+        HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("feedbackIds", ids);
 
         try {
@@ -232,6 +244,46 @@ public class FeedbackServiceImpl implements FeedbackService {
         return result;
     }
 
+    // @Override
+    public FeedbackSummary querySummery(QueryMap qMap, String schemaName) {
+        List<FeedbackEntity> result = new ArrayList<>();
+
+        try {
+            SqlSession session = getSqlSession();
+            result = session.selectList("queryFeedbacks", qMap);
+            session.commit();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Table qTable = JsonHandler.readJson(new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create().toJson(result));
+        List<String> colNames = qTable.columnNames();
+
+        FeedbackSummary summary = new FeedbackSummary();
+
+        HashMap<String, FeedbackSchema> sSchemaMap = new Config().getFeedbackSchema(schemaName);
+
+        for (String colName : colNames) {
+            if (!sSchemaMap.containsKey(colName)){
+                continue;
+            }
+            String sType = sSchemaMap.get(colName).getSummaryType();
+            if ("Time".equals(sType)) {
+                // Table scolTable = qTable.categoricalColumn(colName).countByCategory();
+            } else if ("Category".equals(sType)) {
+                Table scolTable = qTable.categoricalColumn(colName).countByCategory();
+                List<CategorySummaryItem> summaryItems = new Gson().fromJson(JsonHandler.writeJson(scolTable), new TypeToken<ArrayList<CategorySummaryItem>>(){}.getType());
+                summary.addColumnSummary(new FeedbackColumnSummary(colName, summaryItems));
+                Logger.getGlobal().info(JsonHandler.writeJson(scolTable));
+            } else {
+
+            }
+        }
+
+        return summary;
+    }
+
     @Override
     public int treat(Long id, String treatmentStatus, String treatment, String treatPerson) {
         FeedbackEntity fEntity = new FeedbackEntity();
@@ -243,7 +295,7 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     @Override
-    public int treat(FeedbackEntity feedbackEntity){
+    public int treat(FeedbackEntity feedbackEntity) {
         List<FeedbackEntity> fEntities = new ArrayList<>();
         fEntities.add(feedbackEntity);
         return treat(fEntities);
@@ -255,7 +307,7 @@ public class FeedbackServiceImpl implements FeedbackService {
         try {
             SqlSession session = getSqlSession();
             for (FeedbackEntity feedbackEntity : feedbackEntities) {
-                if (!FeedbackConverter.getInstance().validate(feedbackEntity)){
+                if (!FeedbackConverter.getInstance().validate(feedbackEntity)) {
                     throw new IllegalArgumentException("data error");
                 }
                 result += session.insert("treatById", feedbackEntity);

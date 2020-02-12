@@ -1,6 +1,11 @@
 package com.element.demo.config;
 
+import java.util.HashMap;
+
 import javax.annotation.PostConstruct;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +26,14 @@ public class Config {
 
     public String getFeedbackSchemas(){
         return config.feedbackConfig.getSchemas();
+    }
+
+    public HashMap<String, FeedbackSchema> getFeedbackSchema(String schemaName){
+        HashMap<String, HashMap<String, FeedbackSchema>> sHashMap = new Gson().fromJson(config.feedbackConfig.getSchemas(), new TypeToken<HashMap<String, HashMap<String, FeedbackSchema>>>() {}.getType());
+        if (sHashMap == null) {
+            return new HashMap<>();
+        }
+        return sHashMap.get(schemaName);
     }
 
     public int getFeedbackDistributeTimeInterval(){

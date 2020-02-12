@@ -14,4 +14,5 @@ public class FeedbackSchema {
     @Getter @Setter private String name;
     @Getter @Setter private List<String> display;
     @Getter @Setter private boolean editable;
+    @Getter @Setter private String summaryType;
 }
