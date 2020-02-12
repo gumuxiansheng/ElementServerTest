@@ -1,11 +1,7 @@
 package com.element.table;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringWriter;
-import java.time.format.DateTimeFormatter;
-
-import com.element.demo.util.LocalDateAdapter;
 
 import tech.tablesaw.api.Table;
 import tech.tablesaw.io.json.JsonReadOptions;

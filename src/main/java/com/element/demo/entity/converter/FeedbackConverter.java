@@ -1,5 +1,7 @@
 package com.element.demo.entity.converter;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,10 +9,17 @@ import com.element.demo.config.Config;
 import com.element.demo.config.FeedbackEnumerate;
 import com.element.demo.config.FeedbackSchema;
 import com.element.demo.entity.FeedbackEntity;
+import com.element.demo.entity.FeedbackSummary;
+import com.element.demo.entity.FeedbackSummary.CategorySummaryItem;
+import com.element.demo.entity.FeedbackSummary.FeedbackColumnSummary;
+import com.element.demo.util.LocalDateAdapter;
+import com.element.table.JsonHandler;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import tech.tablesaw.api.Row;
+import tech.tablesaw.api.Table;
 
 public class FeedbackConverter {
 
@@ -78,5 +87,32 @@ public class FeedbackConverter {
         }
 
         return true;
+    }
+
+    public FeedbackSummary getSummary(String schemaName, List<FeedbackEntity> result) {
+        FeedbackSummary summary = new FeedbackSummary();
+
+        HashMap<String, FeedbackSchema> sSchemaMap = new Config().getFeedbackSchema(schemaName);
+
+        Table qTable = JsonHandler.readJson(new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create().toJson(result));
+        List<String> colNames = qTable.columnNames();
+
+        for (String colName : colNames) {
+            if (!sSchemaMap.containsKey(colName)){
+                continue;
+            }
+            String sType = sSchemaMap.get(colName).getSummaryType();
+            if ("Time".equals(sType)) {
+                // TODO: Table scolTable = qTable.categoricalColumn(colName).countByCategory();
+            } else if ("Category".equals(sType)) {
+                Table scolTable = qTable.categoricalColumn(colName).countByCategory();
+                List<CategorySummaryItem> summaryItems = new Gson().fromJson(JsonHandler.writeJson(scolTable), new TypeToken<ArrayList<CategorySummaryItem>>(){}.getType());
+                summary.addColumnSummary(new FeedbackColumnSummary(colName, summaryItems));
+            } else {
+
+            }
+        }
+        return summary;
     }
 }

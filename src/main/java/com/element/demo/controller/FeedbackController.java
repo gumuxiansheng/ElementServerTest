@@ -97,7 +97,7 @@ public class FeedbackController {
     @CrossOrigin
     public FeedbackSummary querySummary(@RequestBody QueryMap qMap, HttpServletRequest request) {
         String schemaName = request.getParameterMap().keySet().contains("schema") ? request.getParameter("schema") : "schema1";
-        return feebackService.querySummery(qMap, schemaName);
+        return feebackService.querySummary(qMap, schemaName);
     }
 
     /**

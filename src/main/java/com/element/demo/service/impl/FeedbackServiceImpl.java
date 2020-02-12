@@ -2,28 +2,18 @@ package com.element.demo.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.element.demo.config.Config;
-import com.element.demo.config.FeedbackSchema;
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
 import com.element.demo.entity.FeedbackSummary;
-import com.element.demo.entity.FeedbackSummary.CategorySummaryItem;
-import com.element.demo.entity.FeedbackSummary.FeedbackColumnSummary;
 import com.element.demo.entity.converter.FeedbackConverter;
 import com.element.demo.service.FeedbackService;
-import com.element.demo.util.LocalDateAdapter;
 import com.element.table.ExcelHandler;
 import com.element.table.ExcelTable;
-import com.element.table.JsonHandler;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -32,7 +22,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.springframework.web.multipart.MultipartFile;
 
 import tech.tablesaw.api.Row;
-import tech.tablesaw.api.Table;
 
 public class FeedbackServiceImpl implements FeedbackService {
 
@@ -245,41 +234,10 @@ public class FeedbackServiceImpl implements FeedbackService {
     }
 
     // @Override
-    public FeedbackSummary querySummery(QueryMap qMap, String schemaName) {
-        List<FeedbackEntity> result = new ArrayList<>();
+    public FeedbackSummary querySummary(QueryMap qMap, String schemaName) {
+        List<FeedbackEntity> result = query(qMap);
 
-        try {
-            SqlSession session = getSqlSession();
-            result = session.selectList("queryFeedbacks", qMap);
-            session.commit();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Table qTable = JsonHandler.readJson(new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter()).create().toJson(result));
-        List<String> colNames = qTable.columnNames();
-
-        FeedbackSummary summary = new FeedbackSummary();
-
-        HashMap<String, FeedbackSchema> sSchemaMap = new Config().getFeedbackSchema(schemaName);
-
-        for (String colName : colNames) {
-            if (!sSchemaMap.containsKey(colName)){
-                continue;
-            }
-            String sType = sSchemaMap.get(colName).getSummaryType();
-            if ("Time".equals(sType)) {
-                // Table scolTable = qTable.categoricalColumn(colName).countByCategory();
-            } else if ("Category".equals(sType)) {
-                Table scolTable = qTable.categoricalColumn(colName).countByCategory();
-                List<CategorySummaryItem> summaryItems = new Gson().fromJson(JsonHandler.writeJson(scolTable), new TypeToken<ArrayList<CategorySummaryItem>>(){}.getType());
-                summary.addColumnSummary(new FeedbackColumnSummary(colName, summaryItems));
-                Logger.getGlobal().info(JsonHandler.writeJson(scolTable));
-            } else {
-
-            }
-        }
+        FeedbackSummary summary = FeedbackConverter.getInstance().getSummary(schemaName, result);
 
         return summary;
     }

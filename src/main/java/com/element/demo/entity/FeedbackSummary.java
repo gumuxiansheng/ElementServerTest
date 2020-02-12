@@ -1,7 +1,6 @@
 package com.element.demo.entity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.annotations.SerializedName;
