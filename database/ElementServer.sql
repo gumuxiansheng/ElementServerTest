@@ -11,7 +11,7 @@
  Target Server Version : 80016
  File Encoding         : 65001
 
- Date: 10/02/2020 23:12:48
+ Date: 12/02/2020 22:19:54
 */
 
 SET NAMES utf8mb4;
@@ -43,7 +43,7 @@ CREATE TABLE `feedback` (
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '数据创建时间',
   `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '数据更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=620 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=665 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for feedback_history
@@ -78,6 +78,7 @@ CREATE TABLE `feedback_history` (
 -- ----------------------------
 DROP TABLE IF EXISTS `feedback_treatment`;
 CREATE TABLE `feedback_treatment` (
+  `mId` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `id` int(11) NOT NULL COMMENT 'treatment记录在feedback表主键',
   `file_name` varchar(255) DEFAULT NULL COMMENT '数据来源文件名',
   `serial_num` int(11) DEFAULT NULL COMMENT '条目文档内序号',
@@ -86,23 +87,27 @@ CREATE TABLE `feedback_treatment` (
   `treatment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '处理意见',
   `treat_time` datetime DEFAULT NULL COMMENT '处理时间',
   `treat_person` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '经手人',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `finished` tinyint(1) DEFAULT '0' COMMENT '是否处理完毕',
+  PRIMARY KEY (`mId`,`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Table structure for feedback_treatment_history
 -- ----------------------------
 DROP TABLE IF EXISTS `feedback_treatment_history`;
 CREATE TABLE `feedback_treatment_history` (
-  `id` int(11) DEFAULT NULL COMMENT 'treatment记录在feedback表主键',
+  `mId` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `id` int(11) NOT NULL COMMENT 'treatment记录在feedback表主键',
   `file_name` varchar(255) DEFAULT NULL COMMENT '数据来源文件名',
   `serial_num` int(11) DEFAULT NULL COMMENT '条目文档内序号',
   `version` varchar(255) DEFAULT NULL COMMENT '版本号',
   `treatment_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '处理状态',
   `treatment` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '处理意见',
   `treat_time` datetime DEFAULT NULL COMMENT '处理时间',
-  `treat_person` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '经手人'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `treat_person` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '经手人',
+  `finished` tinyint(1) DEFAULT '0' COMMENT '是否处理完毕',
+  PRIMARY KEY (`mId`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Procedure structure for OverrideFeedbackFile
@@ -127,19 +132,27 @@ delimiter ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `TreatFeedbackById`;
 delimiter ;;
-CREATE PROCEDURE `ElementServer`.`TreatFeedbackById`(IN feedbackId LONG, IN treatmentStatus VARCHAR(255), IN treatment VARCHAR(255), IN treatPerson VARCHAR(255))
+CREATE PROCEDURE `ElementServer`.`TreatFeedbackById`(IN feedbackId LONG, IN treatmentStatus VARCHAR(255), IN treatment VARCHAR(255), IN treatPerson VARCHAR(255), IN inStatus VARCHAR(255))
 BEGIN
   #Routine body goes here...
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
+-- 	DECLARE EXIT HANDLER FOR SQLEXCEPTION ROLLBACK;
 	START TRANSACTION;
+	  UPDATE feedback
+			SET `status`=inStatus
+			WHERE id=feedbackId;
+	
 		INSERT INTO feedback_treatment_history SELECT * FROM feedback_treatment WHERE feedback_treatment.id=feedbackId;
+
 		DELETE FROM feedback_treatment WHERE feedback_treatment.id=feedbackId;
+
 		INSERT INTO feedback_treatment(id, file_name, serial_num, version) SELECT id, file_name, serial_num, version FROM feedback WHERE id = feedbackId;
+
 		UPDATE feedback_treatment 
 			SET treatment_status=treatmentStatus,
 					treatment=treatment,
 					treat_person=treatPerson,
-					treat_time=NOW()
+					treat_time=NOW(),
+					finished=IF(inStatus="已处理",1,0)
 			WHERE id = feedbackId;
 	COMMIT;
 END
