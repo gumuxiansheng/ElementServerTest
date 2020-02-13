@@ -233,10 +233,9 @@ public class FeedbackServiceImpl implements FeedbackService {
         return result;
     }
 
-    // @Override
+    @Override
     public FeedbackSummary querySummary(QueryMap qMap, String schemaName) {
         List<FeedbackEntity> result = query(qMap);
-
         FeedbackSummary summary = FeedbackConverter.getInstance().getSummary(schemaName, result);
 
         return summary;

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.element.demo.dao.QueryMap;
 import com.element.demo.entity.FeedbackEntity;
+import com.element.demo.entity.FeedbackSummary;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +27,8 @@ public interface FeedbackService {
     public List<FeedbackEntity> query(List<Long> ids);
 
     public List<FeedbackEntity> query(QueryMap qm);
+
+    public FeedbackSummary querySummary(QueryMap qMap, String schemaName);
 
     public int distribute(boolean immediately);
 
