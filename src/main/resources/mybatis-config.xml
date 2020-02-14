@@ -20,6 +20,6 @@
     </environment>
   </environments>
   <mappers>
-    <mapper resource="com/element/demo/dao/FeedbackDao.xml"/>
+    <mapper resource="com/casisd/feedback/dao/FeedbackDao.xml"/>
   </mappers>
 </configuration>

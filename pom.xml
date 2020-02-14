@@ -7,7 +7,7 @@
         <version>2.2.4.RELEASE</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.element</groupId>
+    <groupId>com.casisd</groupId>
     <artifactId>ElementServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ElementServer</name>
